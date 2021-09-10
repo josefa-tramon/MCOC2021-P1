@@ -9,7 +9,7 @@ class Reticulado(object):
     def __init__(self):
         super(Reticulado, self).__init__()
         
-        print("Constructor de Reticulado")
+        #print("Constructor de Reticulado")
         
         self.xyz = np.zeros((Reticulado.__NNodosInit__,3), dtype=np.double)
         self.Nnodos = 0
@@ -24,7 +24,8 @@ class Reticulado(object):
         
         """Implementar"""	
 
-        print(f"Quiero agregar un nodo en ({x} {y} {z})")
+        #print(f"Quiero agregar un nodo en ({x} {y} {z})")
+
         numero_de_nodo_actual = self.Nnodos
 
         self.xyz[numero_de_nodo_actual,:] = [x, y, z]
@@ -134,10 +135,23 @@ class Reticulado(object):
 
     def __str__(self):
 
-        s = "Soy un reticulado :)"
-
-        s += "\n"
+        s = "Nodos:"
+        s += "\n\n"
         
-        s += str(self.xyz[0 : self.Nnodos,:])
+
+        for i in range(len(self.xyz[self.Nnodos,:])):
+
+            n = self.xyz
+            s += (f"{i} : ({n[i][0]}, {n[i][1]}, {n[i][2]})\n")
+
+        s += "\n\n"
+
+        s += "Barras:"
+        s += "\n\n"
+
+        for i in range(len(self.barras)):
+
+            b = self.barras
+            s += (f"{i} : [ {b[i].ni} {b[i].nj} ]\n")
 
         return s

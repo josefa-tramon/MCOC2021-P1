@@ -19,7 +19,7 @@ opc_nodos_default = {
     "color_nodos": "k",
     "color_borde_nodos": [0.7,0.7,0.7],
     "usar_posicion_deformada": False,
-    "factor_amplificacion_deformada": 1.,
+    "factor_amplificacion_deformada": 1.5,
     "datos_desplazamientos_nodales": None,
 }
 
