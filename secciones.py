@@ -140,7 +140,7 @@ class SeccionICHA(object):
 
         else:
 
-            s = f"Tipo de seccion {self.denominacion} no encontrada en base de datos."
+            s = f"Tipo de seccion {self.denominacion} no encontrada en base de datos.\n"
 
 
         s += f"Seccion ICHA {self.denominacion}\n"
