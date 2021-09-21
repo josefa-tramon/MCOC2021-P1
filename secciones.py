@@ -87,10 +87,10 @@ class SeccionICHA(object):
             hoja = 'Cajon'
 
         elif perfil[0] == "O":
-            hoja = 'Circulos Mayores'
+            hoja = 'Circulares Mayores'
 
         elif perfil[0] == "o":
-            hoja = 'Circulos Menores'
+            hoja = 'Circulares Menores'
 
         else:
             hoja = 'h'
