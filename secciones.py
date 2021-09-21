@@ -42,7 +42,7 @@ class SeccionICHA(object):
 
         den = []
 
-        denominacion = "[]1100x350x400.4"
+        denominacion = self.denominacion
 
         info = denominacion.split('x')
 
