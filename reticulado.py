@@ -191,7 +191,7 @@ class Reticulado(object):
         print(f"Guardando en {nombre}")
 
         dataset = h5py.File(nombre, "w")
-        dataser["xyz"] = self.xyz
+        dataset["xyz"] = self.xyz
 
         #hay que guardar nodos, barras, secciones y apoyos.
         #Secciones: solo queremos guardarlas por su nombre

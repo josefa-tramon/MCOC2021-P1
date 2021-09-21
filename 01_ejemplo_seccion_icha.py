@@ -8,3 +8,6 @@ print(sec2)
 
 sec3 = SeccionICHA("HR1118x405x517.7",base_datos="Perfiles ICHA.xlsx")
 print(sec3)
+
+# sec4 = SeccionICHA("O1624x1600x12",base_datos="Perfiles ICHA.xlsx")
+# print(sec4)
