@@ -127,8 +127,20 @@ class SeccionICHA(object):
 
     def __str__(self):
 
-        
-        for c in self.row
+        find = True
+        for c in self.row:
+            if str(i) == 'nan':
+                find = False
+            else:
+                find = True
+
+        if find:
+
+            s = f"{self.denominacion} encontrada. A={self.area()} Ix={self.inercia_xx()} Iy={self.inercia_yy()}\n"
+
+        else:
+
+            s = f"Tipo de seccion {self.denominacion} no encontrada en base de datos."
 
 
         s += f"Seccion ICHA {self.denominacion}\n"
