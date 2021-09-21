@@ -155,3 +155,27 @@ class Reticulado(object):
             s += (f"{i} : [ {b[i].ni} {b[i].nj} ]\n")
 
         return s
+
+
+    def guardar(self, nombre):
+
+        import h5py
+
+        print(f"Guardando en {nombre}")
+
+        dataset = h5py.File(nombre, "w")
+        dataser["xyz"] = self.xyz
+
+        #hay que guardar nodos, barras, secciones y apoyos.
+        #Secciones: solo queremos guardarlas por su nombre
+
+        barras = np.zeros(len(self.barras), dtype = np.int32)
+
+        
+        for i, b in enumerate(self.barras):
+
+
+            print(f"barra = {i} nj = {b.nj} ni = {b.ni}")
+            barras[i, 0] = b.ni
+            barras[i, 1] = b.nj
+            
