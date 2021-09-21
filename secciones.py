@@ -58,8 +58,12 @@ class SeccionICHA(object):
         den = "".join(den)
         info.insert(0,den)
 
-        for n in info[1:]:
-            n = float(n)
+        
+        for n in range(len(info[1:])):
+            info[n+1] = float(info[n+1])
+
+
+        return info
 
     def __init__(self, denominacion, base_datos="Perfiles ICHA.xlsx", debug=False, color=rand(3)):
         super(SeccionICHA, self).__init__()
@@ -67,35 +71,39 @@ class SeccionICHA(object):
         self.color = color  #color para la seccion
 
 
-        self.perfil = self.obtener_perfil()                          #lista con valores de denominación
+        perfil = self.obtener_perfil()                          #lista con valores de denominación
 
         
-        if self.perfil[0] == "H":
+        if perfil[0] == "H":
             hoja = 'H'
 
-        elif self.perfil[0] == "PH":
+        elif perfil[0] == "PH":
             hoja = 'PH'
 
-        elif self.perfil[0] == "HR" or self.perfil[0] == "W":
+        elif perfil[0] == "HR" or perfil[0] == "W":
             hoja = 'HR'
 
-        elif self.perfil[0] == "[]":
+        elif perfil[0] == "[]":
             hoja = 'Cajon'
 
-        elif self.perfil[0] == "O":
+        elif perfil[0] == "O":
             hoja = 'Circulos Mayores'
 
-        elif self.perfil[0] == "o":
+        elif perfil[0] == "o":
             hoja = 'Circulos Menores'
 
+        else:
+            hoja = 'h'
 
-        self.df = pd.read_excel(io = base_datos, sheet_name = hoja)
+
+        df = pd.read_excel(io = base_datos, sheet_name = hoja)
 
         i = 0
 
-        for f in self.df.index:
+        for f in df.index:
 
-            if str(df.loc[f, 1]) != 'nan':
+            if str(df.iloc[f, 0]) != 'nan':
+
                 break
 
             i += 1
@@ -103,17 +111,18 @@ class SeccionICHA(object):
         e_1 = i
         e_2 = e_1 + 2
         e_3 = e_2 + 2
+        df.columns = df.loc[e_2]
 
-
-        self.row = row
+        self.row = df.iloc[0,:]
 
         for index, row in df.iterrows():
 
-            if row['d'] == self.perfil[1] and row['bf'] == self.perfil[2] and row['peso'] == self.perfil[3]:
-                self.row = df.loc[index, : ]
+            if row['d'] == perfil[1] and row['bf'] == perfil[2] and row['peso'] == perfil[3]:
+                self.row = df.iloc[index, : ]
 
    
     def area(self):
+
         return self.row['A']/1e6
 
     def peso(self):
@@ -129,7 +138,7 @@ class SeccionICHA(object):
 
         find = True
         for c in self.row:
-            if str(i) == 'nan':
+            if str(c) == 'nan':
                 find = False
             else:
                 find = True
@@ -144,10 +153,10 @@ class SeccionICHA(object):
 
 
         s += f"Seccion ICHA {self.denominacion}\n"
-        s += f" Area : {self.area}\n"
-        s += f" Peso : {self.peso}\n"
-        s += f" Ixx  : {self.inercia_xx}\n"
-        s += f" Iyy  : {self.inercia_yy}\n"
+        s += f" Area : {self.area()}\n"
+        s += f" Peso : {self.peso()}\n"
+        s += f" Ixx  : {self.inercia_xx()}\n"
+        s += f" Iyy  : {self.inercia_yy()}\n"
 
 
         return s
