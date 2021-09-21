@@ -67,23 +67,50 @@ class Reticulado(object):
 
 
     def agregar_restriccion(self, nodo, gdl, valor=0.0):
-        
-        """Implementar"""	
-        
-        return 0
+        if nodo not in self.restricciones:
+            self.restricciones[nodo] = [[gdl, valor]]
+        else:
+            self.restricciones[nodo].append([gdl, valor])
+
 
     def agregar_fuerza(self, nodo, gdl, valor):
-        
-        """Implementar"""	
-        
-        return 0
+        if nodo not in self.cargas:
+            self.cargas[nodo] = [[gdl, valor]]
+        else:
+            self.cargas[nodo].append([gdl, valor])
 
 
-    def ensamblar_sistema(self, factor_peso_propio=0.):
-        
-        """Implementar"""	
-        
-        return 0
+    def ensamblar_sistema(self):
+        Ngdl = self.Nnodos * self.Ndimensiones
+        self.K = np.zeros((Ngdl,Ngdl), dtype=np.double)
+        self.f = np.zeros((Ngdl), dtype=np.double)
+        self.u = np.zeros((Ngdl), dtype=np.double)
+
+        #Iterar sobre las barras:
+        for i,b in enumerate(self.barras):
+            ke = b.obtener_rigidez(self)
+            fe = b.obtener_vector_de_cargas(self) 
+
+            ni, nj = b.obtener_conectividad()
+
+
+            #Metodo rigidez directa
+            if self.Ndimensiones == 2:
+                d = [2*ni, 2*ni+1 , 2*nj, 2*nj+1]
+                   
+            elif self.Ndimensiones == 3:
+                d = [3*ni, 3*ni+1 , 3*ni+2, 3*nj, 3*nj+1, 3*nj+2]
+                
+            else:
+                print("Error Ndimensiones")
+                   
+            for i in range(self.Ndimensiones*2): #Son dos nodos por elemento
+                p = d[i]
+                for j in range(self.Ndimensiones*2): #Son dos nodos por elemento
+                    q = d[j]
+                    self.K[p,q] += ke[i,j]
+                self.f[p] = fe[i]
+                
 
 
 
