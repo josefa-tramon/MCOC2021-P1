@@ -97,7 +97,9 @@ class Barra(object):
         
         Tθ = np.array([ -cosθx, -cosθy, -cosθz, cosθx, cosθy, cosθz ]).reshape((6,1))
         
-        return self.E * A / L * (Tθ.T @ ue)
+        fuerza = E_acero * A / L * (Tθ.T @ ue)
+
+        return fuerza
 
 
 

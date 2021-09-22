@@ -124,9 +124,11 @@ class Reticulado(object):
 
     def obtener_fuerzas(self):
         
-        """Implementar"""	
-        
-        return np.array([0.000001 for i in range(len(self.barras))])
+        fuerzas = np.zeros((len(self.barras)), dtype=np.double)
+        for i,b in enumerate(self.barras):
+            fuerzas[i] = b.obtener_fuerza(self)
+
+        return fuerzas
 
 
     def obtener_factores_de_utilizacion(self, f):
