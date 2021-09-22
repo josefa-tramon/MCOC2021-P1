@@ -71,7 +71,10 @@ class Barra(object):
     def obtener_vector_de_cargas(self, ret):
     
         W = self.calcular_peso(ret)
-        return np.array([0, 0, -W, 0, 0, -W])
+        
+        vector_cargas = np.array([0, 0, -W, 0, 0, -W])
+        
+        return vector_cargas
 
 
     def obtener_fuerza(self, ret):
