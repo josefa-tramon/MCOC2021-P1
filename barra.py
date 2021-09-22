@@ -75,7 +75,7 @@ class Barra(object):
         W = self.calcular_peso(ret)
         f = factor_peso_propio
         
-        vector_cargas = W/2 * np.array([0, 0, -1, 0, 0, -1])
+        vector_cargas = W/2 * np.array(f[0],f[1],f[2],f[0],f[1],f[2])
         
         return vector_cargas
 
