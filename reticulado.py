@@ -80,7 +80,7 @@ class Reticulado(object):
             self.cargas[nodo].append([gdl, valor])
 
 
-    def ensamblar_sistema(self):
+    def ensamblar_sistema(self, factor_peso_propio = 0.):
         Ngdl = self.Nnodos * self.Ndimensiones
         self.K = np.zeros((Ngdl,Ngdl), dtype=np.double)
         self.f = np.zeros((Ngdl), dtype=np.double)
