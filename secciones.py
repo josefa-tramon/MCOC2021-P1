@@ -13,13 +13,13 @@ class Circular(object):
         self.color = color  #color para la seccion
 
     def area(self):
-        return pi*(self.D**2 - self.Dint**2)/4
+        return "{0:.1f}".format(pi*(self.D**2 - self.Dint**2)/4)
 
     def peso(self):
-        return self.area()*ρ_acero*g_
+        return "{0:.1f}".format(self.area()*ρ_acero*g_)
 
     def inercia_xx(self):
-        return pi*(self.D**4 - self.Dint**4)/4
+        return "{0:.1f}".format((pi/4)*(self.D**4 - self.Dint**4)/1e6)
 
     def inercia_yy(self):
         return self.inercia_xx()
@@ -27,12 +27,9 @@ class Circular(object):
     def nombre(self):
         return f"O{self.D*1e3:.0f}x{self.Dint*1e3:.0f}"
 
-    def __str__(self):
+    def _str_(self):
         return f"Seccion Circular {self.nombre()}"
 
-
-        
-#Mas adelante, no es para P1E1
 
 class SeccionICHA(object):
     """Lee la tabla ICHA y genera una seccion apropiada"""
@@ -108,17 +105,30 @@ class SeccionICHA(object):
 
             i += 1
 
-        e_1 = i
-        e_2 = e_1 + 2
-        e_3 = e_2 + 2
-        df.columns = df.loc[e_2]
+        if perfil[0] == "O" or perfil[0] == "o":
+
+            self.circular = Circular(perfil[1], perfil[2])
+
+            df.columns = df.loc[i + 1]
+
+        else:
+
+            df.columns = df.loc[i + 2]
+
 
         self.row = df.iloc[0,:]
 
+
         for index, row in df.iterrows():
 
-            if row['d'] == perfil[1] and row['bf'] == perfil[2] and row['peso'] == perfil[3]:
-                self.row = df.iloc[index, : ]
+            if perfil[0] == "O" or perfil[0] == "o":
+
+                if row['D'] == perfil[1] and row['Dint'] == perfil[2] and row['peso'] == perfil[3]:
+                    self.row = df.iloc[index, : ]
+
+            else:
+                if row['d'] == perfil[1] and row['bf'] == perfil[2] and row['peso'] == perfil[3]:
+                    self.row = df.iloc[index, : ]
 
    
     def area(self):
@@ -129,9 +139,21 @@ class SeccionICHA(object):
         return self.row['peso']
 
     def inercia_xx(self):
+
+        perfil = self.obtener_perfil()
+
+        if perfil[0] == "O" or perfil[0] == "o":
+            return self.circular.inercia_xx()
+          
         return self.row['Ix/10⁶']
 
     def inercia_yy(self):
+
+        perfil = self.obtener_perfil()
+
+        if perfil[0] == "O" or perfil[0] == "o":
+            return self.circular.inercia_yy()
+
         return self.row['Iy/10⁶']
 
     def __str__(self):

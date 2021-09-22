@@ -157,7 +157,6 @@ class Reticulado(object):
 
         s = "Nodos:"
         s += "\n\n"
-        
 
         for i in range(len(self.xyz[self.Nnodos,:])):
 
