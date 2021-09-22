@@ -3,7 +3,7 @@ from scipy.linalg import solve
 
 class Reticulado(object):
     """Define un reticulado"""
-    __NNodosInit__ = 100
+    __NNodosInit__ = 1
 
     #constructor
     def __init__(self):
@@ -16,6 +16,7 @@ class Reticulado(object):
         self.barras = []
         self.cargas = {}
         self.restricciones = {}
+        self.Ndimensiones = 3
         """Implementar"""	
         
 
@@ -25,7 +26,7 @@ class Reticulado(object):
         #print(f"Quiero agregar un nodo en ({x} {y} {z})")
 
         numero_de_nodo_actual = self.Nnodos
-
+        self.xyz.resize((numero_de_nodo_actual+1, 3))
         self.xyz[numero_de_nodo_actual,:] = [x, y, z]
 
         self.Nnodos += 1
@@ -79,30 +80,38 @@ class Reticulado(object):
 
 
     def ensamblar_sistema(self, factor_peso_propio = 0.):
-        Ngdl = self.Nnodos * 3
-        self.K = np.zeros((Ngdl,Ngdl), dtype=np.double)
-        self.f = np.zeros((Ngdl), dtype=np.double)
-        self.u = np.zeros((Ngdl), dtype=np.double)
+        
+        self.Ngdl = self.Nnodos * self.Ndimensiones
+        
+        self.K = np.zeros((self.Ngdl,self.Ngdl), dtype=np.double)
+        self.f = np.zeros((self.Ngdl), dtype=np.double)
+        self.u = np.zeros((self.Ngdl), dtype=np.double)
+        self.fpeso = factor_peso_propio
 
         #Ensamblar rigidez y vector de cargas
-        # enumerate(self.barras):
-        for e in self.barras:
-            ke = e.obtener_rigidez(self)
-            fe = e.obtener_vector_de_cargas(self)
+        for i,barra in enumerate(self.barras):
+            Ke = barra.obtener_rigidez(self)
+            fe = barra.obtener_vector_de_cargas(self)
 
-            ni, nj = e.obtener_conectividad()
+            ni = barra.obtener_conectividad()[0]
+            nj = barra.obtener_conectividad()[1]
+            
+            if self.Ndimensiones == 2:
+                d = [2*ni, 2*ni+1, 2*nj, 2*nj+1]
+            
+            elif self.Ndimensiones == 3:
+                d = [3*ni, 3*ni+1, 3*ni+2, 3*nj, 3*nj+1, 3*nj+2]
+            
+            else:
+                print("Error en N° de dimensiones")
 
-
-            #Metodo rigidez directa
-            d = [3*ni, 3*ni+1 , 3*ni+2, 3*nj, 3*nj+1, 3*nj+2]
-
-            for i in range(6):
+            for i in range(self.Ndimensiones*2):
                 p = d[i]
-                for j in range(6):
+                for j in range(self.Ndimensiones*2):
                     q = d[j]
-                    self.K[p,q] += ke[i,j]
-                self.f[p] = fe[i]
-                
+                    self.K[p,q] += Ke[i,j]
+                if factor_peso_propio != [0., 0., 0.]:
+                    self.f[p] += fe[i]
 
 
     def resolver_sistema(self):
@@ -156,7 +165,7 @@ class Reticulado(object):
         s = "Nodos:"
         s += "\n\n"
 
-        for i in range(len(self.xyz[self.Nnodos,:])):
+        for i in range(self.Nnodos):
 
             n = self.xyz
             s += (f"{i} : ({n[i][0]}, {n[i][1]}, {n[i][2]})\n")
