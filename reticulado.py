@@ -21,8 +21,6 @@ class Reticulado(object):
 
 
     def agregar_nodo(self, x, y, z=0):
-        
-        """Implementar"""	
 
         #print(f"Quiero agregar un nodo en ({x} {y} {z})")
 
@@ -172,6 +170,41 @@ class Reticulado(object):
 
             b = self.barras
             s += (f"{i} : [ {b[i].ni} {b[i].nj} ]\n")
+
+        s += "\n\n"
+        
+        s += "restricciones:"
+        s += "\n\n"
+        
+        for nodo in self.restricciones:
+            s += f"{nodo} : {self.restricciones[nodo]}\n"
+            
+        s += "\n\n"
+        
+        s += "cargas:"
+        s += "\n\n"
+        
+        for nodo in self.cargas:
+            s += f"{nodo} : {self.cargas[nodo]}\n"
+            
+        s += "\n\n"
+
+
+        s += "desplazamientos:"
+        s += "\n\n"
+            
+##########AGREGAR INFO DESPLAZAMIENTOS
+                    
+        s += "\n\n"
+
+
+        # f = self.recuperar_fuerzas()
+        s += "fuerzas:"
+        s += "\n\n"
+            
+##########AGREGAR IMFO FUERZAS
+        s += "\n"
+
 
         return s
 
