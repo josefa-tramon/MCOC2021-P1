@@ -36,8 +36,9 @@ class Barra(object):
 
 
     def calcular_area(self):
-        return self.seccion.area()
-
+        return float(self.seccion.area())
+    
+    
     def calcular_peso(self, reticulado):
         """Devuelve el largo de la barra. 
         xi : Arreglo numpy de dimenson (3,) con coordenadas del nodo i
@@ -46,7 +47,8 @@ class Barra(object):
         
         L = self.calcular_largo(reticulado)
         A = self.calcular_area()
-        return  A * L * g_*ρ_acero
+        # return  self.calcular_area()* L * g_*ρ_acero
+        return ρ_acero *A * L * g_
 
 
 
@@ -63,13 +65,18 @@ class Barra(object):
         cosθz = (xj[2] - xi[2])/L
     
         Tθ = np.array([ -cosθx, -cosθy, -cosθz, cosθx, cosθy, cosθz ]).reshape((6,1))
-    
-        return A * E_acero / L * (Tθ @ Tθ.T )
+        
+        ke = A * E_acero / L * (Tθ @ Tθ.T )
+        
+        return ke
 
     def obtener_vector_de_cargas(self, ret):
     
         W = self.calcular_peso(ret)
-        return np.array([0, 0, -W, 0, 0, -W])
+        
+        vector_cargas = np.array([0, 0, -W, 0, 0, -W])
+        
+        return vector_cargas
 
 
     def obtener_fuerza(self, ret):

@@ -13,7 +13,7 @@ class Circular(object):
         self.color = color  #color para la seccion
 
     def area(self):
-        return "{0:.1f}".format(pi*(self.D**2 - self.Dint**2)/4)
+        return (pi*(self.D**2 - self.Dint**2)/4)
 
     def peso(self):
         return "{0:.1f}".format(self.area()*ρ_acero*g_)
