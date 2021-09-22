@@ -81,37 +81,30 @@ class Reticulado(object):
 
 
     def ensamblar_sistema(self, factor_peso_propio = 0.):
-        Ngdl = self.Nnodos * self.Ndimensiones
+        Ngdl = self.Nnodos * 3
         self.K = np.zeros((Ngdl,Ngdl), dtype=np.double)
         self.f = np.zeros((Ngdl), dtype=np.double)
         self.u = np.zeros((Ngdl), dtype=np.double)
 
-        #Iterar sobre las barras:
-        for i,b in enumerate(self.barras):
-            ke = b.obtener_rigidez(self)
-            fe = b.obtener_vector_de_cargas(self) 
+        #Ensamblar rigidez y vector de cargas
+        
+        for e in enumerate(self.barras):
+            ke = e.obtener_rigidez(self)
+            fe = e.obtener_vector_de_cargas(self)
 
-            ni, nj = b.obtener_conectividad()
+            ni, nj = e.obtener_conectividad()
 
 
             #Metodo rigidez directa
-            if self.Ndimensiones == 2:
-                d = [2*ni, 2*ni+1 , 2*nj, 2*nj+1]
-                   
-            elif self.Ndimensiones == 3:
-                d = [3*ni, 3*ni+1 , 3*ni+2, 3*nj, 3*nj+1, 3*nj+2]
-                
-            else:
-                print("Error Ndimensiones")
-                   
-            for i in range(self.Ndimensiones*2): #Son dos nodos por elemento
+            d = [3*ni, 3*ni+1 , 3*ni+2, 3*nj, 3*nj+1, 3*nj+2]
+
+            for i in range(6):
                 p = d[i]
-                for j in range(self.Ndimensiones*2): #Son dos nodos por elemento
+                for j in range(6):
                     q = d[j]
                     self.K[p,q] += ke[i,j]
                 self.f[p] = fe[i]
                 
-
 
 
     def resolver_sistema(self):
