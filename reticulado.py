@@ -87,8 +87,8 @@ class Reticulado(object):
         self.u = np.zeros((Ngdl), dtype=np.double)
 
         #Ensamblar rigidez y vector de cargas
-        
-        for e in enumerate(self.barras):
+        # enumerate(self.barras):
+        for e in self.barras:
             ke = e.obtener_rigidez(self)
             fe = e.obtener_vector_de_cargas(self)
 
