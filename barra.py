@@ -63,8 +63,10 @@ class Barra(object):
         cosθz = (xj[2] - xi[2])/L
     
         Tθ = np.array([ -cosθx, -cosθy, -cosθz, cosθx, cosθy, cosθz ]).reshape((6,1))
-    
-        return A * E_acero / L * (Tθ @ Tθ.T )
+        
+        ke = A * E_acero / L * (Tθ @ Tθ.T )
+        
+        return ke
 
     def obtener_vector_de_cargas(self, ret):
     
