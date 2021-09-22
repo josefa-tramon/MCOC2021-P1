@@ -79,7 +79,7 @@ class Reticulado(object):
             self.cargas[nodo].append([gdl, valor])
 
 
-    def ensamblar_sistema(self, factor_peso_propio = 0.):
+    def ensamblar_sistema(self, factor_peso_propio):
         
         self.Ngdl = self.Nnodos * self.Ndimensiones
         
@@ -95,15 +95,10 @@ class Reticulado(object):
 
             ni = barra.obtener_conectividad()[0]
             nj = barra.obtener_conectividad()[1]
+                       
             
-            if self.Ndimensiones == 2:
-                d = [2*ni, 2*ni+1, 2*nj, 2*nj+1]
+            d = [3*ni, 3*ni+1, 3*ni+2, 3*nj, 3*nj+1, 3*nj+2]
             
-            elif self.Ndimensiones == 3:
-                d = [3*ni, 3*ni+1, 3*ni+2, 3*nj, 3*nj+1, 3*nj+2]
-            
-            else:
-                print("Error en N° de dimensiones")
 
             for i in range(self.Ndimensiones*2):
                 p = d[i]
@@ -121,14 +116,9 @@ class Reticulado(object):
         return 0
 
     def obtener_desplazamiento_nodal(self, n):
-        
-        if self.Ndimensiones == 2:
-            dofs = [2*n, 2*n+1]
-        elif self.Ndimensiones == 3:
-            dofs = [3*n, 3*n+1, 3*n+2]
-        else:
-            print ("Error en N° dimensiones")
-        
+
+        dofs = [3*n, 3*n+1, 3*n+2]
+
         return self.u[dofs]
 
 
@@ -136,7 +126,7 @@ class Reticulado(object):
         
         """Implementar"""	
         
-        return 0
+        return np.array([0.000001 for i in range(len(self.barras))])
 
 
     def obtener_factores_de_utilizacion(self, f):
@@ -158,11 +148,6 @@ class Reticulado(object):
         """Implementar"""	
         
         return 0
-
-
-
-
-
 
 
     def __str__(self):

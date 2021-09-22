@@ -70,12 +70,12 @@ class Barra(object):
         
         return ke
 
-    def obtener_vector_de_cargas(self, ret, factor_peso_propio):
+    def obtener_vector_de_cargas(self, ret):
     
         W = self.calcular_peso(ret)
-        f = factor_peso_propio
+        f = ret.fpeso
         
-        vector_cargas = W/2 * np.array(f[0],f[1],f[2],f[0],f[1],f[2])
+        vector_cargas = W/2 * np.array([f[0],f[1],f[2],f[0],f[1],f[2]])
         
         return vector_cargas
 
