@@ -101,6 +101,4 @@ ver_reticulado_3d(ret,
 	opciones_barras=opciones_barras)
 
 
-print(dir())
-
-ret.guardar("03b_ejemplo_reticulado_3d_peso_propio.h5)
+#ret.guardar("03b_ejemplo_reticulado_3d_peso_propio.h5)

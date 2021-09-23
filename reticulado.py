@@ -111,9 +111,60 @@ class Reticulado(object):
 
     def resolver_sistema(self):
         
-        """Implementar"""	
+        N_gdl = self.Nnodos * self.Ndimensiones
+        gdl_libres       = np.arange(N_gdl)
+        gdl_restringidos = []
+
+
+        for n in self.restricciones:
+
+            for restriccion in self.restricciones[n]:
+
+
+                gdl = restriccion[0]
+                valor = restriccion[1]
+                gdl_global = n*3 + gdl
+                self.u[gdl_global] += valor
+                gdl_restringidos.append(gdl_global)
+
+       
+
+
+        for nodo in self.cargas:
+
+            for carga in self.cargas[nodo]:
+
+                gdl = carga[0]
+                valor = carga[1]
+                gdl_global = nodo*3 + gdl
+                self.f[gdl_global] += valor
+
+
+        gdl_libres = np.setdiff1d(gdl_libres,gdl_restringidos)
+                
+
+        Kff = self.K[np.ix_(gdl_libres,gdl_libres)]
+        Kfc = self.K[np.ix_(gdl_libres,gdl_restringidos)]
+        Kcf = Kfc.T
+        Kcc = self.K[np.ix_(gdl_restringidos,gdl_restringidos)]
         
-        return 0
+        uf = self.u[gdl_libres]
+        uc = self.u[gdl_restringidos]
+
+        ff = self.f[gdl_libres]
+        fc = self.f[gdl_restringidos]
+
+        uf = solve(Kff, ff- Kfc @ uc)
+
+        # Resolver para obtener uf -->  Kff uf = ff - Kfc*uc
+        self.Rc = Kcf@uf + Kcc@uc - fc  
+
+        #Asignar uf al vector solucion
+        self.u[gdl_libres] = uf
+
+        #Marcar internamente que se tiene solucion
+        self.tiene_solucion = True
+        
 
     def obtener_desplazamiento_nodal(self, n):
 
@@ -154,61 +205,65 @@ class Reticulado(object):
 
     def __str__(self):
 
-        s = "Nodos:"
-        s += "\n\n"
+        s = " nodos:"
+        s += "\n"
 
         for i in range(self.Nnodos):
 
             n = self.xyz
-            s += (f"{i} : ({n[i][0]}, {n[i][1]}, {n[i][2]})\n")
+            s += (f"  {i} : ({n[i][0]}, {n[i][1]}, {n[i][2]})\n")
 
         s += "\n\n"
 
-        s += "Barras:"
-        s += "\n\n"
+        s += " barras:"
+        s += "\n"
 
         for i in range(len(self.barras)):
 
             b = self.barras
-            s += (f"{i} : [ {b[i].ni} {b[i].nj} ]\n")
+            s += (f"  {i} : [ {b[i].ni} {b[i].nj} ]\n")
 
         s += "\n\n"
         
-        s += "restricciones:"
-        s += "\n\n"
+        s += " restricciones:"
+        s += "\n"
         
         for nodo in self.restricciones:
-            s += f"{nodo} : {self.restricciones[nodo]}\n"
+            s += f"  {nodo} : {self.restricciones[nodo]}\n"
             
         s += "\n\n"
         
-        s += "cargas:"
-        s += "\n\n"
+        s += " cargas:"
+        s += "\n"
         
         for nodo in self.cargas:
-            s += f"{nodo} : {self.cargas[nodo]}\n"
+            s += f"  {nodo} : {self.cargas[nodo]}\n"
             
         s += "\n\n"
 
-
-        s += "desplazamientos:"
-        s += "\n\n"
-            
-##########AGREGAR INFO DESPLAZAMIENTOS
+        s += " desplazamientos:"
+        s += "\n"
+        
+        if self.Ndimensiones == 3:
+                uvw = self.u.reshape((-1,3))
+                for n in range(self.Nnodos):
+                    s += f"  {n} : ( {uvw[n,0]}, {uvw[n,1]}, {uvw[n,2]})\n "
                     
         s += "\n\n"
 
-
-        # f = self.recuperar_fuerzas()
-        s += "fuerzas:"
-        s += "\n\n"
-            
-##########AGREGAR IMFO FUERZAS
+        s += " fuerzas:"
         s += "\n"
-
-
+        
+        f = self.obtener_fuerzas()
+        for b in range(len(self.barras)):
+            s += f"  {b} : {f[b]}\n"
+            
+        s += "\n"
+       
+        s += f"Ndimensiones = {self.Ndimensiones}"
+        
+        s += "\n\n\n"
         return s
-
 
     def guardar(self, nombre):
 
