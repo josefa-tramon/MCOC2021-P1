@@ -156,6 +156,9 @@ class SeccionICHA(object):
 
         return self.row['Iy/10⁶']
 
+    def nombre(self):
+        return self.denominacion
+
     def __str__(self):
 
         find = True
