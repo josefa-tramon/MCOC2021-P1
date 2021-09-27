@@ -182,11 +182,14 @@ class Reticulado(object):
         return fuerzas
 
 
-    def obtener_factores_de_utilizacion(self, f):
+    def obtener_factores_de_utilizacion(self, f, ϕ=0.9):
         
-        """Implementar"""	
-        
-        return 0
+        FU = np.zeros((len(self.barras)), dtype=np.double)
+        for i,b in enumerate(self.barras):
+            FU[i] = b.obtener_factor_utilizacion(f[i], ϕ)
+
+        return FU
+
 
     def rediseñar(self, Fu, ϕ=0.9):
         
@@ -197,11 +200,12 @@ class Reticulado(object):
 
 
     def chequear_diseño(self, Fu, ϕ=0.9):
-        
-        """Implementar"""	
-        
-        return 0
-
+        cumple = True
+        for i,b in enumerate(self.barras):
+            if not b.chequear_diseño(Fu[i], self, ϕ):
+                print(f"----> Barra {i} no cumple algun criterio. ")
+                cumple = False
+        return cumple
 
     def __str__(self):
 
